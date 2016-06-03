@@ -9,20 +9,25 @@ const defaults = {
   boolean: [
     'help',
     'version',
-    'open'
+    'open',
+    'console'
   ],
   alias: {
     h: 'help',
     v: 'version',
     l: 'language',
     o: 'open',
-    lc: 'locale'
+    lc: 'locale',
+    c: 'console'
   },
   default: {
     language: 'js',
-    locale: 'en-US'
+    locale: 'en-US',
+    console: true,
+    open: false
   }
 };
+
 const options = minimist(process.argv.slice(2), defaults);
 const help = `
 Usage: mdn <KEYWORD>
@@ -40,6 +45,7 @@ Options:
   -l   --language        Specify a language to search for the keyword (defaults to "js")
   -o   --open            Open MDN page in web browser
   -lc  --locale          Specify a locale (defaults to "en-US")
+  -c   --console         Output to console (default)
 `;
 
 const run = options => {
@@ -57,13 +63,15 @@ const run = options => {
   const language = options.language || 'js';
   const shouldOpen = options.open || false;
   const locale = options.locale || 'en-US';
+  const toConsole = options.console;
 
   if (keyword !== undefined && keyword.length) {
     mdn({
       keyword,
       language,
       shouldOpen,
-      locale
+      locale,
+      toConsole
     });
   } else {
     process.stderr.write('You must provide a valid keyword\n');
